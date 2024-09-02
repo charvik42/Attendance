@@ -88,6 +88,9 @@ def markAttendance(name):
       now = datetime.now()
       dtString = now.strftime('%H:%M:%S')
       f.writelines(f'\n{name},{dtString}')
+      print("Marked attendance for", name)
+    if name in nameList:
+      print("Attendance already marked for today.")
 
 #compute encodings for images
 def findEncodings(images):
@@ -129,7 +132,18 @@ while True:
   for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
     matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
     faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
-    # print(faceDis)
+    
+    # print(matches)
+#new face registration    
+    if True not in matches:
+      print('New Face Detected')
+      new_face = input("Please enter your full name: ")
+      # file_path = os.path.join(path, f'{new_face}.jpg')
+      cv2.imwrite(os.path.join(path, f'{new_face}.jpg'),img)
+      # cv2.imwrite(path/f'{new_face}.jpg', img)
+      print("New Face registered.")
+      markAttendance(new_face.upper())
+      print("Marked attendance for", new_face)
     
     matchIndex = np.argmin(faceDis)
 
@@ -140,8 +154,9 @@ while True:
     y1, x2, y2, x1 = y1*4, x2*4, y2*4, x1*4
     cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
     cv2.rectangle(img, (x1, y2-35),(x2,y2),(0,255,0), cv2.FILLED)
-    cv2.putText(img, name, (x1+6, y2-6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
-    markAttendance(name)
+    cv2.putText(img, classNames[matchIndex].upper(), (x1+6, y2-6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
+    markAttendance(classNames[matchIndex].upper())
+    # print("Marked attendance for", classNames[matchIndex])
 
   cv2.imshow('Webcam',img)
   cv2.waitKey(1)

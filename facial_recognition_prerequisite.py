@@ -7,16 +7,16 @@ Original file is located at
     https://colab.research.google.com/drive/1YjmRWP14ArYG_QmE2OEsaJGC_tpPLPcu
 """
 
-!pip install face_recognition
+# !pip install face_recognition
 
-!pip install cmake
-!pip install dlib
-!pip install opencv-python
+# !pip install cmake
+# !pip install dlib
+# !pip install opencv-python
 
 import cv2
 import numpy as np
 import face_recognition
-from google.colab.patches import cv2_imshow
+# from google.colab.patches import cv2_imshow
 
 imgElon = face_recognition.load_image_file('elon1.jpg')
 imgElon = cv2.cvtColor(imgElon,cv2.COLOR_BGR2RGB)
@@ -39,6 +39,6 @@ print(results,faceDis)
 cv2.putText(imgTest,f'{results} {round(faceDis[0],2)}',(50,50),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,255),2)
 
 
-cv2_imshow(imgElon)
-cv2_imshow(imgTest)
+cv2.imshow(imgElon)
+cv2.imshow(imgTest)
 #cv2.waitKey(0)
