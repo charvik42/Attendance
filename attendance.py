@@ -8,6 +8,7 @@
 # """
 
 # !pip install face_recognition
+# venv\Scripts\activate
 import face_recognition
 
 import os
@@ -76,21 +77,56 @@ for cl in myList:
 # print(classNames)
 #print('Images Found')
 
-#mark attendance
+# #mark attendance in csv file
+# def markAttendance(name):
+#   with open('Attendance.csv','r+') as f:
+#     myDataList = f.readlines()
+#     nameList =[]
+#     for line in myDataList:
+#       entry = line.split(',')
+#       nameList.append(entry[0])
+#     if name not in nameList:
+#       now = datetime.now()
+#       dateString = now.strftime('%Y-%m-%d')
+#       dtString = now.strftime('%H:%M:%S')
+#       f.writelines(f'\n{name},{dateString},{dtString}')
+#       print("Marked attendance for", name)
+#     if name in nameList:
+#       print("Attendance already marked for today.")
+
+# mark attendance in excel file
+from openpyxl import Workbook, load_workbook
+import os
+
 def markAttendance(name):
-  with open('Attendance.csv','r+') as f:
-    myDataList = f.readlines()
-    nameList =[]
-    for line in myDataList:
-      entry = line.split(',')
-      nameList.append(entry[0])
-    if name not in nameList:
-      now = datetime.now()
-      dtString = now.strftime('%H:%M:%S')
-      f.writelines(f'\n{name},{dtString}')
-      print("Marked attendance for", name)
-    if name in nameList:
-      print("Attendance already marked for today.")
+    filename = 'Attendance.xlsx'
+
+    if not os.path.exists(filename):
+        # Create new workbook if it doesn't exist
+        wb = Workbook()
+        ws = wb.active
+        ws.append(["Name", "Time", "Date"])  # Header row
+        wb.save(filename)
+
+    # Load workbook
+    wb = load_workbook(filename)
+    ws = wb.active
+
+    # Check for duplicate (same name + same date)
+    from datetime import datetime
+    now = datetime.now()
+    timeString = now.strftime('%H:%M:%S')
+    dateString = now.strftime('%Y-%m-%d')
+
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        if row[0] == name and row[2] == dateString:
+            print(f"Attendance already marked for {name} today.")
+            return
+
+    # Append attendance
+    ws.append([name, timeString, dateString])
+    wb.save(filename)
+    print(f"Marked attendance for {name} at {timeString} on {dateString}")
 
 #compute encodings for images
 def findEncodings(images):
