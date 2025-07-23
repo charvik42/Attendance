@@ -20,4 +20,4 @@ It uses `OpenCV`, `face_recognition`, and optionally `openpyxl`.
 
 ## Requirements
 
-Install Python dependencies using the command `pip install -r requirements.txt`:
+Install Python dependencies using the command `pip install -r requirements.txt`
